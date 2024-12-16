@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2x2 Task Matrix</title>
+    <style>
+        body {
+            font-family: "Garamond", serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f8f8;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 10px;
+        }
+        .profile {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .search {
+            position: relative;
+        }
+        .search input {
+            padding: 5px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0 10px;
+        }
+        .matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 10px;
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 10px;
+        }
+        .quadrant {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        .do { background-color: #78d870; }
+        .schedule { background-color: #5cd7e2; }
+        .delegate { background-color: #ffde59; }
+        .eliminate { background-color: #ff4d4d; }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+            width: 100%;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            font-weight: normal;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Right Slider */
+        .slider {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            transition: right 0.5s;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+        }
+        .slider h3 {
+            margin-bottom: 10px;
+        }
+        .slider p {
+            font-size: 0.9em;
+        }
+        .slider-toggle {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px 0 0 5px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .matrix {
+                grid-template-columns: 1fr;
+            }
+        }
+        footer {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="profile">👤 Profile</div>
+        <h1>2x2 Task Matrix</h1>
+        <div class="search">
+            <input type="text" id="search" placeholder="Search Tasks..." oninput="searchTasks()">
+        </div>
+    </header>
+
+    <!-- Matrix -->
+    <div class="matrix">
+        <div class="quadrant do">
+            <div><strong>Do</strong><br>Important and Urgent</div>
+            <ul id="doTasks"></ul>
+            <button onclick="addTask('doTasks')">Add Task</button>
+        </div>
+        <div class="quadrant schedule">
+            <div><strong>Schedule</strong><br>Important but Not Urgent</div>
+            <ul id="scheduleTasks"></ul>
+            <button onclick="addTask('scheduleTasks')">Add Task</button>
+        </div>
+        <div class="quadrant delegate">
+            <div><strong>Delegate</strong><br>Not Important but Urgent</div>
+            <ul id="delegateTasks"></ul>
+            <button onclick="addTask('delegateTasks')">Add Task</button>
+        </div>
+        <div class="quadrant eliminate">
+            <div><strong>Eliminate</strong><br>Not Important and Not Urgent</div>
+            <ul id="eliminateTasks"></ul>
+            <button onclick="addTask('eliminateTasks')">Add Task</button>
+        </div>
+    </div>
+
+    <!-- Slider -->
+    <div class="slider" id="slider">
+        <h3>About 2x2 Matrix</h3>
+        <p>The 2x2 matrix helps prioritize tasks by urgency and importance.</p>
+        <h3>How to Use</h3>
+        <p>- Do: Important & Urgent tasks.<br>- Schedule: Important but not urgent.<br>- Delegate: Urgent but not important.<br>- Eliminate: Not urgent & not important.</p>
+        <h3>Contact Us</h3>
+        <p>Email: support@example.com</p>
+    </div>
+    <div class="slider-toggle" onclick="toggleSlider()">☰</div>
+
+    <!-- Footer -->
+    <footer>
+        © SreeValli
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        function addTask(listId) {
+            const taskName = prompt("Enter the task:");
+            const deadline = prompt("Enter the deadline (e.g., 'Tomorrow 5 PM'):");
+            if (taskName && taskName.trim() !== "") {
+                const list = document.getElementById(listId);
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `<input type="checkbox"> <span>${taskName} <em>(${deadline || 'No deadline'})</em></span>`;
+                list.appendChild(listItem);
+            }
+        }
+
+        function toggleSlider() {
+            const slider = document.getElementById("slider");
+            slider.style.right = slider.style.right === "0px" ? "-300px" : "0px";
+        }
+
+        function searchTasks() {
+            const searchInput = document.getElementById("search").value.toLowerCase();
+            const tasks = document.querySelectorAll("ul li");
+            tasks.forEach(task => {
+                const text = task.textContent.toLowerCase();
+                task.style.display = text.includes(searchInput) ? "flex" : "none";
+            });
+        }
+    </script>
+</body>
+</html>
