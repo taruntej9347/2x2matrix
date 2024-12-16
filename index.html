@@ -16,16 +16,15 @@
         }
         header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* Adjusted to center-align the header */
             align-items: center;
             width: 90%;
             max-width: 1200px;
             margin-top: 10px;
         }
-        .profile {
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
+        h1 {
+            text-align: center;
+            margin: 20px 0 10px;
         }
         .search {
             position: relative;
@@ -35,10 +34,6 @@
             font-size: 1em;
             border: 1px solid #ccc;
             border-radius: 5px;
-        }
-        h1 {
-            text-align: center;
-            margin: 20px 0 10px;
         }
         .matrix {
             display: grid;
@@ -145,7 +140,6 @@
 <body>
     <!-- Header -->
     <header>
-        <div class="profile" onclick="showModal()">👤 Profile</div>
         <h1>2x2 Task Matrix</h1>
         <div class="search">
             <input type="text" id="search" placeholder="Search Tasks..." oninput="searchTasks()">
