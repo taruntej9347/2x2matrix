@@ -25,6 +25,7 @@
         .profile {
             font-size: 1.2em;
             font-weight: bold;
+            cursor: pointer;
         }
         .search {
             position: relative;
@@ -93,55 +94,58 @@
             background-color: #45a049;
         }
 
-        /* Right Slider */
-        .slider {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 300px;
-            height: 100%;
-            background-color: #333;
-            color: white;
-            padding: 20px;
-            transition: right 0.5s;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-        }
-        .slider h3 {
-            margin-bottom: 10px;
-        }
-        .slider p {
-            font-size: 0.9em;
-        }
-        .slider-toggle {
-            position: fixed;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border-radius: 5px 0 0 5px;
-            cursor: pointer;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .matrix {
-                grid-template-columns: 1fr;
-            }
-        }
+        /* Footer */
         footer {
             text-align: center;
             margin: 20px 0;
             font-size: 1em;
             color: #555;
         }
+
+        /* Option Buttons Section */
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .footer-buttons button {
+            font-size: 1.5em;
+            background-color: #4CAF50;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+        }
+
+        .footer-buttons button:hover {
+            background-color: #45a049;
+        }
+
+        /* Content Section */
+        .content {
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 30px;
+            text-align: left;
+            font-size: 1em;
+        }
+
+        .content h3 {
+            margin-top: 20px;
+        }
+
+        .content ul {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header>
-        <div class="profile">👤 Profile</div>
+        <div class="profile" onclick="showModal()">👤 Profile</div>
         <h1>2x2 Task Matrix</h1>
         <div class="search">
             <input type="text" id="search" placeholder="Search Tasks..." oninput="searchTasks()">
@@ -172,27 +176,38 @@
         </div>
     </div>
 
-    <!-- Slider -->
-    <div class="slider" id="slider">
-        <h3>About 2x2 Matrix</h3>
-        <p>The 2x2 matrix helps prioritize tasks by urgency and importance.</p>
-        <h3>How to Use</h3>
-        <p>- Do: Important & Urgent tasks.<br>- Schedule: Important but not urgent.<br>- Delegate: Urgent but not important.<br>- Eliminate: Not urgent & not important.</p>
-        <h3>Contact Us</h3>
-        <p>Email: support@example.com</p>
+    <!-- Content for About 2x2 Matrix, How to Use, and Contact Us -->
+    <div class="content" id="contentSection">
+        <!-- Default content is empty -->
     </div>
-    <div class="slider-toggle" onclick="toggleSlider()">☰</div>
 
     <!-- Footer -->
     <footer>
-        © SreeValli
+        <div class="footer-buttons">
+            <button onclick="showContent('about')">🧑‍🏫</button> <!-- About 2x2 Matrix -->
+            <button onclick="showContent('howToUse')">🛠️</button> <!-- How to Use -->
+            <button onclick="showContent('contact')">📞</button> <!-- Contact Us -->
+        </div>
+        <p>© SreeValli</p>
     </footer>
+
+    <!-- Profile Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="hideModal()">X</span>
+            <h2>Login / Create Account</h2>
+            <input type="text" placeholder="Username">
+            <input type="password" placeholder="Password">
+            <button>Submit</button>
+        </div>
+    </div>
 
     <!-- JavaScript -->
     <script>
         function addTask(listId) {
             const taskName = prompt("Enter the task:");
             const deadline = prompt("Enter the deadline (e.g., 'Tomorrow 5 PM'):");
+
             if (taskName && taskName.trim() !== "") {
                 const list = document.getElementById(listId);
                 const listItem = document.createElement("li");
@@ -201,9 +216,49 @@
             }
         }
 
-        function toggleSlider() {
-            const slider = document.getElementById("slider");
-            slider.style.right = slider.style.right === "0px" ? "-300px" : "0px";
+        function showContent(contentId) {
+            const contentSection = document.getElementById("contentSection");
+            contentSection.innerHTML = "";  // Clear the content before adding new content
+
+            if (contentId === "about") {
+                contentSection.innerHTML = `
+                    <h3>About 2x2 Matrix</h3>
+                    <p>A 2x2 matrix is a visual tool that helps prioritize tasks and projects by organizing them into four quadrants based on two axes:</p>
+                    <ul>
+                        <li><strong>Importance:</strong> How much value a task will create for your goals, customers, or users.</li>
+                        <li><strong>Urgency:</strong> How soon a task needs to be done, based on deadlines, dependencies, or market opportunities.</li>
+                    </ul>
+                    <p>The 2x2 matrix is also known as the Impact Effort Matrix. It's a simple way to identify the most important and valuable ideas so you can determine which projects to work on next.</p>
+                `;
+            } else if (contentId === "howToUse") {
+                contentSection.innerHTML = `
+                    <h3>How to Use</h3>
+                    <p>Here are some tips for using a 2x2 matrix:</p>
+                    <ul>
+                        <li><strong>Top-left:</strong> Quick wins that are high impact and low effort.</li>
+                        <li><strong>Top-right:</strong> High impact but require significant resources.</li>
+                        <li><strong>Bottom-left:</strong> Can be pursued when capacity allows.</li>
+                        <li><strong>Not-important/not-urgent:</strong> Don't do it.</li>
+                        <li><strong>Not-important/urgent:</strong> Consider delegating.</li>
+                        <li><strong>Important/urgent:</strong> Do that task now.</li>
+                        <li><strong>Important/not-urgent:</strong> The sweet spot where you want your work to land.</li>
+                    </ul>
+                `;
+            } else if (contentId === "contact") {
+                contentSection.innerHTML = `
+                    <h3>Contact Us</h3>
+                    <p><strong>Mobile:</strong> +91 9347044020</p>
+                    <p><strong>Email:</strong> taruntej777@gmail.com</p>
+                `;
+            }
+        }
+
+        function showModal() {
+            document.getElementById("profileModal").style.display = "flex";
+        }
+
+        function hideModal() {
+            document.getElementById("profileModal").style.display = "none";
         }
 
         function searchTasks() {
